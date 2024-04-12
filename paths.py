@@ -2,8 +2,8 @@
 import os
 #Credenciales
 #Weatherlink
-User="SGIRPC"
-Password="sgirpc2023"
+User=" "
+Password=" "
 #Paths
 def makedir(path):
     if not os.path.exists(path):
