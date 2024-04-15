@@ -8,37 +8,41 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
-
-# Function to create directories
-def makedir(path):
-    if not os.path.exists(path):
-        os.makedirs(path)
-        print("El directorio " + path + " ha sido creado")
-    else:
-        print("El directorio " + path + " ya existe")
-
-# Directories
-pathestaciones = "../estaciones"
-pathfiles = "../files"
-
-makedir(pathestaciones)
-makedir(pathfiles)
+from webdriver_manager.chrome import ChromeDriverManager 
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 # URLs and file paths
 url = "https://aviationweather.gov/data/metar/?id=MMMX&hours=48&include_taf=yes"
 fileoutmmmx = paths.file+"MMMX.txt"
 fileoutmmsm = paths.file+"MMSM.txt"
 
-# Selenium configuration
-chrome_options = Options()
+# Selenium configuration with chrome. 
+# NOTA: Hasta el dia de hoy 15/04/2024 la version de chrome para linux estable con webdriver es la 114
+# Chromedriver se puede descargar desde la siguiente liga  
+# https://chat.openai.com/c/61d07157-c3d1-4808-adc5-6e1e0cbbf06f
+# web_options = Options()
+# Selenium configuration with firefox
+web_options = FirefoxOptions()
 # chrome_options.add_argument('--headless')
-chrome_options.add_argument("--disable-gpu")  # Necessary on some systems
-chrome_options.add_argument("--window-size=1920,1080")  # Window size
-driver_path = paths.chromedriver
-service = ChromeService(executable_path=driver_path)
+web_options.add_argument("--disable-gpu")  # Necessary on some systems
+web_options.add_argument("--window-size=1920,1080")  # Window size
+# Webdriver localpath
+# Para poder usar firefox driver hay que descargar el complemento geckodriver desde la siguiente liga 
+# https://github.com/mozilla/geckodriver/releases
+driver_path_chrome = paths.chromedriver 
+driver_path_firefox = paths.firefoxdriver 
+# Create a service to chrome from a downloaded file
+# Service = ChromeService(executable_path=driver_path_chrome)
 
-# Create a Selenium WebDriver instance
-driver = webdriver.Chrome(service=service, options=chrome_options)
+# Create a Selenium WebDriver instance with downloaded file
+# driver = webdriver.Chrome(service=Service, options=web_options)
+
+# Create a selenium WebDriver instance with firefox
+Service = FirefoxService(executable_path=driver_path_firefox)
+driver = webdriver.Firefox(service=Service, options=web_options)
+#  Create a Selenium WebDriver instance fron network
+# driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),chrome_options=web_options)
 
 # Access the page with Selenium
 driver.get(url)
