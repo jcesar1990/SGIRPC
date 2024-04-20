@@ -1,7 +1,4 @@
 import paths
-from asyncore import read
-from cgi import print_arguments
-from distutils import extension
 from operator import not_
 from os import close, remove, write, path
 import os
@@ -21,11 +18,12 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import Select
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager 
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
+
 
 # Ruta del ejecutable del Chrome WebDriver
 ruta_webdriver = paths.chromedriver
@@ -39,7 +37,7 @@ fechadia=(now.strftime("%d-%m-%y"))
 print(fechadia)
 
 #Se eliminan los archivos .dat que puedan existir en la carpeta de descargas para evitar errores al momento de la compilación.
-descargas="/home/cesar/Documents/temporal/"
+descargas=paths.tempo+'\\'
 tipo="*.dat"
 delite=glob.glob(descargas + tipo)
 for f in delite:
@@ -47,17 +45,13 @@ for f in delite:
     print("Los archivos .dat fueron eliminados")
 
 #Definimos los PATHS para los archivos.
-dircsvsacmex0 = paths.tempo+'SACMEX0.csv'
-dircsvsacmex1 = paths.tempo+'SACMEX1.csv'
-dirtxtsacmex1 = paths.tempo+'SACMEX1.txt'
-dircsvsacmex2 = paths.tempo+'SACMEX2.csv'
-dircsvsacmex3 = paths.tempo+'SACMEX3.csv'
-dircsvsacmex4 = paths.file+'SACMEX.csv'
-dirsacmex_save= paths.save+fechadia+'SACMEX.csv'
-dirscreenshot1= paths.screenshot+'menu.png'
-dirscreenshot2= paths.screenshot+'isoyetas.png'
-dirscreenshot3= paths.screenshot+'descarga.png'
-
+dircsvsacmex0 = paths.tempo+'\\SACMEX0.csv'
+dircsvsacmex1 = paths.tempo+'\\SACMEX1.csv'
+dirtxtsacmex1 = paths.tempo+'\\SACMEX1.txt'
+dircsvsacmex2 = paths.tempo+'\\SACMEX2.csv'
+dircsvsacmex3 = paths.tempo+'\\SACMEX3.csv'
+dircsvsacmex4 = paths.file+'\\SACMEX.csv'
+dirsacmex_save= paths.save+'\\'+fechadia+'SACMEX.csv'
 
 #Copiar el archivo de SACMEX con la tabla en ceros si es que la hora es entre 6:00 y 6:10 horas.
 #Obteniendo la hora actual.
@@ -163,42 +157,42 @@ print(fecha_final_lluvia)
 
 
 try:
-    OP_DRIVER = Options()
-    #OP_DRIVER.add_argument("--headless")
-    OP_DRIVER.add_argument("--disable-gpu")  # Necesario en algunos sistemas
-    OP_DRIVER.add_argument("--window-size=1920,1080")  # Tamaño de ventana
-    #OP_DRIVER.add_argument("--start-maximized")
-    OP_DRIVER.add_argument("--no-sandbox")  # Necesario en algunos sistemas
+    # Selenium configuration with chrome. 
+    # NOTA: Hasta el dia de hoy 15/04/2024 la version de chrome para linux estable con webdriver es la 114
+    # Chromedriver se puede descargar desde la siguiente liga  
+    # https://chat.openai.com/c/61d07157-c3d1-4808-adc5-6e1e0cbbf06f
+    # Selenium configuration with chrome
+    web_options = ChromeOptions()
+    # Selenium configuration with firefox
+    #web_options = FirefoxOptions()
+    # Selenium configuration with opera
+    #web_options = OperaOptions()
+    web_options.add_argument('--headless')
+    web_options.add_argument('--disable-gpu')  # Necessary on some systems
+    web_options.add_argument('--window-size=1920,1080')  # Window size
+    web_options.add_argument('--no-sandbox') # Necesari
+    web_options.add_argument('--remote-debugging-port=9222')
+    # Download path
+    download_path = paths.tempo
+    prefs = {'download.default_directory': download_path}
+    web_options.add_experimental_option('prefs', prefs)
 
-    # Ruta de la carpeta de descargas personalizada
-    OP_DRIVER.add_argument("--disable-software-rasterizer")
-    OP_DRIVER.add_argument("--disable-extensions")
-    OP_DRIVER.add_argument("--disable-gpu")
-    OP_DRIVER.add_argument("--disable-dev-shm-usage")
-    OP_DRIVER.add_argument("--remote-debugging-port=9222")
+    # Webdriver localpath
+    # Para poder usar firefox driver hay que descargar el complemento geckodriver desde la siguiente liga 
+    # https://github.com/mozilla/geckodriver/releases
 
 
+    # Create a selenium WebDriver instance with chrome
+    Service = ChromeService(executable_path=paths.chromedriver)
+    driver = webdriver.Chrome(service=Service, options=web_options)
 
-    # Ruta de la carpeta de descargas personalizada
-    download_path = "/home/cesar/Documents/temporal"
-    prefs = {"download.default_directory": download_path}
-    OP_DRIVER.add_experimental_option("prefs", prefs)
-
-    # Configura el servicio del Chrome WebDriver con webdriver_manager, para este caso, ya tenemos descargado un controlador acorde a la versión de chrome 114.0.5735.90
-    # Para descargar el controlador se debe ingresar la siguiente instrucción en terminal "google-chrome --version", visitar la siguiente página: "https://sites.google.com/chromium.org/driver/downloads" y descargar la versión que corresponde.
-    driver=webdriver.Chrome(service=Service(executable_path=ruta_webdriver),chrome_options=OP_DRIVER)
-
-
-    # Configura el servicio del Chrome WebDriver con webdriver_manager, este descargara automaticamente el controlador mas apto para la versión de chrome instalada
-    #driver=webdriver.Chrome(service=Service(ChromeDriverManager().install()),chrome_options=OP_DRIVER)
-
+    # Create a selenium WebDriver instance with firefox
+    #Service = FirefoxService(executable_path=paths.firefoxdriver)
+    #driver = webdriver.Firefox(service=Service, options=web_options)
     
     driver.get('http://10.11.11.154/SACMEX/')
     driver.implicitly_wait(60)
     print("Ya en menu")
-    # Se toma la captura de pantalla menu
-    driver.get_screenshot_as_file(os.getcwd()+dirscreenshot1)
-    print("Se tomo screenshot de la pagina de inicio")
 
     # El bot realizara los pasos o clicks a seguir para descargar los datos de la plataforma
     # click en informes
@@ -209,9 +203,6 @@ try:
     print("Click en isoyetas")
     driver.find_element(By.XPATH, "/html/body/div[4]/div[4]/div[1]/ul/li[7]/a")\
         .click()
-    # Se toma la captura de pantalla menu
-    driver.get_screenshot_as_file(os.getcwd()+dirscreenshot2)
-    print("Se tomo screenshot del menu isoyetas")
 
     time.sleep(5)
 
@@ -223,7 +214,6 @@ try:
     print("Selecciona la fecha actual")
     driver.find_element(By.XPATH,"//*[@id='form:calendar_input']")\
         .clear()
-    
 
     #Si inserta la fecha actual en el datapicker.
     driver.find_element(By.XPATH,"//*[@id='form:calendar_input']")\
@@ -242,17 +232,15 @@ try:
     driver.find_element(By.XPATH,"//*[@id='formDownload:j_idt31']/span")\
         .click()
     time.sleep(15)
-    # Se toma la captura de pantalla menu
-    driver.get_screenshot_as_file(os.getcwd()+dirscreenshot3)
-    print("Se tomo screenshot de la descarga")
+
     driver.close()
     # Cerrar la página después de realizar las operaciones necesarias
     driver.quit()
 
     print("Se obtuvieron los datos del portal de SACMEX")
-except:
+except Exception as e:
     print("No fue posible la descarga de los datos de SACMEX")
-
+    print("Error:",e)
 
 try:
     # Se designa la ruta del archivo recien descargado.
@@ -271,8 +259,8 @@ try:
 
     # # Cambiamos los nombres de las columnas
 
-    fecha_1=(now.strftime("%d/%m/%y %H:%M"))
-    print(fecha_1)
+    fecha_3=(now.strftime("%d/%m/%y %H:%M"))
+    print(fecha_3)
     SACMEX=open(dircsvsacmex1)
     texto1=SACMEX.read()
     cambio1=texto1.replace("cat", "idEstacion")
@@ -297,7 +285,7 @@ try:
     print(df11)
 
     # Operación de resta para obtener el valor del acumulado en deacuerdo al programador de tareas (10 minutos)
-    dfn=df01.sub(df11)
+    dfn=df11.sub(df01)
     print("resta")
     print(dfn)
     dfn.to_csv(dircsvsacmex2)
@@ -329,7 +317,7 @@ try:
 
         # Crear el DataFrame a partir del diccionario
         archivo_origen = pd.DataFrame(data)
-        #print(archivo_origen)
+        print(archivo_origen)
         archivo_origen.to_csv(dircsvsacmex3, index=False)
         print('El archivo',dircsvsacmex3,'ha sido creado')
     else:
@@ -342,45 +330,48 @@ try:
         for fila in read_csv:
             fila_modificada = [valor if valor != '' else '0.0' for valor in fila]
             print(fila_modificada)
-    # #     write_csv.writerow(fila_modificada)
-    # # print('Se eliminan valores negativos en caso de exstir')
+            write_csv.writerow(fila_modificada)
+    print('Se eliminan valores negativos en caso de exstir')
     
 
-    # # sacmex=pd.read_csv(dircsvsacmex3, index_col=0) 
-    # # print(sacmex)
+    sacmex=pd.read_csv(dircsvsacmex3, index_col=0) 
+    print(sacmex)
 
-    # #    # Se agrega la columna de fecha y hora CONTINUAR AQUI
+    # Se agrega la columna de fecha y hora CONTINUAR AQUI
 
-    # # sacmex=pd.read_csv(dircsvsacmex3, index_col=0)
-    # # sacmex['fechaHora']=np.where(sacmex['lluvia'] !='[]', fecha_1, ' ', )
-    # # #print(sacmex)
-    # # sacmex.to_csv(dircsvsacmex3)
+    sacmex=pd.read_csv(dircsvsacmex3, index_col=0)
+    sacmex['fechaHora']=np.where(sacmex['lluvia'] !='[]', fecha_3, ' ', )
+    print(sacmex)
+    sacmex.to_csv(dircsvsacmex3)
 
-    
+    if not os.path.exists(dircsvsacmex4):
+        shutil.copy(dircsvsacmex3,dircsvsacmex4)
+        print('Se ha copiado el archivo',dircsvsacmex3,'en',dircsvsacmex4)
+    else:
+        sacmexdescargado=pd.read_csv(dircsvsacmex3, index_col=0, header=0)
+        sacmexanterior=pd.read_csv(dircsvsacmex4, index_col=0, header=0) 
+        print('el sacmex descargado es:')
+        print(sacmexdescargado)
+        print('y el sacmex anterior es:')
+        print(sacmexanterior)
 
-    # sacmexdescargado=pd.read_csv(dircsvsacmex2, index_col=0, header=0)
-    # sacmexanterior=pd.read_csv(dircsvsacmex3, index_col=0, header=0) 
-    # print('el sacmex descargado es:')
-    # print(sacmexdescargado)
-    # print('y el sacmex anterior es:')
-    # print(sacmexanterior)
-
-    # nuevosacmex= pd.concat([sacmexdescargado, sacmexanterior])
-    # print('Archivo contatenado')
-    # print(nuevosacmex)
-    # nuevosacmex.to_csv(dircsvsacmex3)
+        nuevosacmex= pd.concat([sacmexdescargado, sacmexanterior])
+        print('Archivo contatenado')
+        print(nuevosacmex)
+        nuevosacmex.to_csv(dircsvsacmex3)
 
    
  
-    # shutil.copy(dircsvsacmex4, dirsacmex_save)
+    shutil.copy(dircsvsacmex4, dirsacmex_save)
 
 
-    # time.sleep(5)
-    # remove(dircsvsacmex0)
-    # os.rename(dircsvsacmex1, dircsvsacmex0)
+    time.sleep(5)
+    remove(dircsvsacmex0)
+    os.rename(dircsvsacmex1, dircsvsacmex0)
     remove(archivo)
     print("Se han obtenido los datos de SACMEX, asi mismo se ha eliminado el archivo .dat para la siguiente ejecución en 10 minutos")
-except:
+except Exception as e:
     print("Se presento una falla con el filtrado de los datos y no se ha eliminado el archivo .dat en este punto")
+    print("Error:",e)
 final=datetime.now()
 print(final)
