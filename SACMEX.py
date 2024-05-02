@@ -38,7 +38,7 @@ def timer(timer_runs):
         fechahora=(now.strftime("%d/%m/%y %H:%M"))
         fechadia=(now.strftime("%d-%m-%y"))
         print(fechadia)
-
+        #Para el script de windows se debe reemplazar / por \\
         #Se eliminan los archivos .dat que puedan existir en la carpeta de descargas para evitar errores al momento de la compilación.
         descargas=paths.tempo+'/'
         tipo="*.dat"
