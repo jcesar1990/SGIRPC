@@ -1,3 +1,4 @@
+import paths
 import os
 import time
 from datetime import date, datetime
@@ -8,7 +9,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
-import paths
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 def weatherlinkweb(estacion,url):
      # Get date
@@ -25,17 +27,22 @@ def weatherlinkweb(estacion,url):
     pwd=paths.Password
     print(user)
 
-    # Selenium configuration
-    chrome_options = Options()
-    chrome_options.add_argument('--headless')
-    chrome_options.add_argument("--disable-gpu")  # Necessary on some systems
-    chrome_options.add_argument("--window-size=1920,1080")  # Window size
-    driver_path = paths.chromedriver
-    service = ChromeService(executable_path=driver_path)
+    # Selenium configuration con chrome
+    #web_options = Options()
+    web_options = FirefoxOptions()
+    web_options.add_argument('--headless')
+    web_options.add_argument("--disable-gpu")  # Necessary on some systems
+    web_options.add_argument("--window-size=1920,1080")  # Window size
+    #driver_path_chrome = paths.chromedriver
+    driver_path_firefox = paths.firefoxdriver
+    #service = ChromeService(executable_path=driver_path_chrome)
 
-    # Create a Selenium WebDriver instance
-    driver = webdriver.Chrome(service=service, options=chrome_options)
-
+    # Create a Selenium WebDriver instance 
+    #driver = webdriver.Chrome(service=service, options=web_options)
+    
+    # Create a selenium WebDriver instance with firefox
+    Service = FirefoxService(executable_path=driver_path_firefox)
+    driver = webdriver.Firefox(service=Service, options=web_options)
 
     #time.sleep(5)
 

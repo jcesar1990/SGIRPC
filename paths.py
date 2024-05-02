@@ -17,12 +17,14 @@ file=principal+'files/'
 tempo=principal+'temporal/'
 save=principal+'save/'
 screenshot=principal+'screenshot/'
+message=principal+'error/'
 
 makedir(principal)
 makedir(file)
 makedir(tempo)
 makedir(save)
 makedir(screenshot)
+makedir(message)
 
 #Drivers
 drivers=principal+'drivers/'
