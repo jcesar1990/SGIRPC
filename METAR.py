@@ -17,8 +17,7 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 try:
     
     # URLs and file paths
-    #url = "https://aviationweather.gov/data/metar/?id=MMMX&hours=48&include_taf=48"
-    url='jjj'
+    url = "https://aviationweather.gov/data/metar/?id=MMMX&hours=48&include_taf=48"
     fileoutmmmx = paths.file+"MMMX.txt"
     fileoutmmsm = paths.file+"MMSM.txt"
 
