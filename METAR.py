@@ -1,5 +1,6 @@
 import paths
 import os
+import ERROR
 import time
 from datetime import datetime
 from datetime import date, datetime, timezone
@@ -28,7 +29,7 @@ try:
     # web_options = Options()
     # Selenium configuration with firefox
     web_options = FirefoxOptions()
-    #web_options.add_argument('--headless')
+    web_options.add_argument('--headless')
     web_options.add_argument("--disable-gpu")  # Necessary on some systems
     web_options.add_argument("--window-size=1920,1080")  # Window size
     # Webdriver localpath
@@ -112,6 +113,4 @@ try:
 # En caso de existir un error se generara un archivo con el registro de los errores    
 except Exception as e:
     driver.close()
-    now=datetime.now()
-    FechaHora=(now.strftime("%d/%m/%y %H:%M")) 
-    print(FechaHora+'-ERROR:')
+    ERROR.handle_error('METAR','webdriver',e)

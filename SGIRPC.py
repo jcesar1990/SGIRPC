@@ -4,6 +4,7 @@ from datetime import datetime
 from datetime import date, datetime, timedelta,timezone
 import ModuloSGIRPC
 import threading
+import ERROR
 
 def timer(timer_runs):
     while timer_runs.is_set():
@@ -47,7 +48,6 @@ def timer(timer_runs):
             ModuloSGIRPC.procesonew("iztapa1","LOMS")
         except:
             print("Hubo un problema con la descarga de datos de estaestación")
-            continue
 
         try:
             ModuloSGIRPC.procesonew("topilejo","TPJS")

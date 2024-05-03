@@ -4,6 +4,7 @@ from datetime import datetime
 from datetime import date, datetime, timedelta,timezone
 import ModuloPEMBU
 import threading
+import ERROR
 
 def timer(timer_runs):
     while timer_runs.is_set():
@@ -21,7 +22,7 @@ def timer(timer_runs):
             continue
 
         try:
-            ModuloPEMBU.proceso("cchn")
+            ModuloPEMBU.proceso("cchn") 
         except:
             print("Hubo un problema al descargar los datos de esta estación")
             continue

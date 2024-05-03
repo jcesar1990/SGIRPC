@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sb
 from os import remove
+import ERROR
 
 now = datetime.now()
 
@@ -66,8 +67,10 @@ def proceso(nombre):
             f.close()
             print("Datos de",nombre,"descargados")
             
-        except:
-            print('Datos de la estación',nombre,'descargados')
+        except Exception as e:
+            error_message = str(e)
+            print(error_message)
+            ERROR.handle_error('ModuloPEMBU',nombre+'request',error_message)
 
         
         try:  #Se editara el archivo txt donde se descargaron los datos de la estacion
@@ -82,8 +85,11 @@ def proceso(nombre):
                             fw.write(line)
                         ptr += 1
             print("Primera fila eliminada")
-        except:
+        except Exception as e:
             print("Ocurrio un problema al momento de eliminar la primera linea del txt o al leer el archivo")
+            error_message = str(e)
+            print(error_message)
+            ERROR.handle_error('ModuloPEMBU',nombre+'delite_line1',error_message)
         try:
             with open(dirtxt, 'r') as fr:
                 
@@ -102,8 +108,11 @@ def proceso(nombre):
                         ptr += 1
             print("Deleted")
 
-        except:
+        except Exception as e:
             print("Oops! No se pudo eliminar fila")
+            error_message = str(e)
+            print(error_message)
+            ERROR.handle_error('ModuloPEMBU',nombre+'delite_line2',error_message)
 
         pembu=open(dirtxt)
         texto=pembu.read()
@@ -375,7 +384,10 @@ def proceso(nombre):
         print("Hubo un problema al obtener los datos de la estacion",nombre)
         try:
             remove(dircsv)
-        except:
+        except Exception as e:
             print("No esxite el archivo "+ dircsv)
+            error_message = str(e)
+            print(error_message)
+            ERROR.handle_error('ModuloPEMBU',nombre+'remove'+dircsv,error_message)
             
             

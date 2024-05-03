@@ -22,20 +22,21 @@ def handle_error(programa, parametro, error_message):
 
     # Crear DataFrame vacío si el archivo de error no existe
     # Nombre de las columnas
-    namecolumns=['fechaHora','programa', 'parametro', 'alerta', 'descripcion']
+    namecolumns=['fechaHora','programa', 'ERROR','descripcion']
     # Codigo de error
-    message = [fechahora, 'CONAGUA' , parametro, 'ERROR', error_message]
+    message = [fechahora, programa , parametro, error_message]
     print(message)
     print('Generando archivo de error en el directorio de error')
     # Crear el archivo de error y guardar el DataFrame
     if not os.path.exists(direrror0):
-        #Se abre el archivo error
+        # Se abre el archivo error
         with open(direrror0,'a',newline='') as origen:
             writer=csv.writer(origen)
             #Se escriben los nombres de las columnas
             writer.writerow(namecolumns)
             #Agregando datos
             writer.writerow(message)
+    # Si el archivo ya existe, agrega la fila con el error
     elif os.path.exists(direrror0):
         with open(direrror0,'a') as existente:
             writer=csv.writer(existente)

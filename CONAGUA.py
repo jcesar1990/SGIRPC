@@ -17,7 +17,7 @@ def conagua(parametro):
     print(fecha)
     print(fechahora)
     #URL's
-    urltemp = 'https://smn.conagua.gob.mx/tools/PHP/sivea_v3/php/getTemperatura.php?per=T'
+    urltemp = 'https://smn.conagua.gob.mx/tools/PHP/sivea_v3/php/getTemperatura.php?per=T30'
     urlpre = 'https://smn.conagua.gob.mx/tools/PHP/sivea_v3/php/getPrecipitacion.php?per=B30'
     urlwind = 'https://smn.conagua.gob.mx/tools/GUI/sivea_v3/php/getViento.php?per=T30'
     file = paths.file+'CONAGUA'+parametro+'.json'

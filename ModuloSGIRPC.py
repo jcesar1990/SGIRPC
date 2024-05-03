@@ -11,7 +11,7 @@ import numpy as np
 import seaborn as sb
 from os import remove
 import threading
-
+import ERROR
 
 espacio = '-------------'
 
@@ -100,8 +100,11 @@ def procesonew(nombre, clave):
         print('Datos de la estación',nombre,'obtenidos')
 
         print('Datos de la estación estacion',clave,'listos')
-    except:
+    except Exception as e:
         print("No se logro obtener datos de la estación",clave)
+        error_message = str(e)
+        print(error_message)
+        ERROR.handle_error('ModuloSGIRPC',nombre+'_request',error_message)
         print(espacio)
 
 #Se eliminaran las primeras lineas del archivo txt
@@ -124,8 +127,11 @@ def procesonew(nombre, clave):
                     ptr += 1
         print("Deleted")
 
-    except:
+    except Exception as e:
         print("Oops! No se pudo eliminar fila")
+        error_message = str(e)
+        print(error_message)
+        ERROR.handle_error('ModuloSGIRPC',nombre+'_delete_line1',error_message)
 
     try:
         with open(dirtxt, 'r') as fr:
@@ -144,8 +150,11 @@ def procesonew(nombre, clave):
                     ptr += 1
         print("Deleted")
 
-    except:
+    except Exception as e:
         print("Oops! No se pudo eliminar fila")
+        error_message = str(e)
+        print(error_message)
+        ERROR.handle_error('ModuloSGIRPC',nombre+'_delete_line2',error_message)
 
     try:
         estacion=open(dirtxt)
@@ -575,14 +584,20 @@ def procesonew(nombre, clave):
         print('Datos de la estación estacion',clave,'listos')
         final=datetime.now()
         print("El proceso se completo a las",final,"la proxima ejecución será en 05 minutos")
-    except:
+    except Exception as e:
         final=datetime.now()
         print("No se logro obtener datos de la estación",clave)
         print("Se presento un error, la próxima ejecición será dentro de 05 minutos a partir de la hora:",final)
+        error_message = str(e)
+        print(error_message)
+        ERROR.handle_error('ModuloSGIRPC',nombre+'_replace',error_message)
         try:
             remove(dircsv)
-        except:
+        except Exception as e:
             print("No existe el archivo "+ dircsv)
+            error_message = str(e)
+            print(error_message)
+            ERROR.handle_error('ModuloSGIRPC',nombre+'_remove'+dircsv,error_message)
 
 
 #Definimoa la función "procesoold" para las estaciones anteriores que será llamada como un modulo en el script python.py
@@ -687,8 +702,11 @@ def procesoold(nombre, clave):
                         ptr += 1
             print("Deleted")
 
-        except:
+        except Exception as e:
             print("Oops! No se pudo eliminar fila")
+            error_message = str(e)
+            print(error_message)
+            ERROR.handle_error('ModuloSGIRPC',nombre+'_delete_line1',error_message)
 
         try:
             with open(dirtxt, 'r') as fr:
@@ -709,6 +727,9 @@ def procesoold(nombre, clave):
 
         except:
             print("Oops! No se pudo eliminar fila")
+            error_message = str(e)
+            print(error_message)
+            ERROR.handle_error('ModuloSGIRPC',nombre+'_delete_line2',error_message)
 
 
         estacion=open(dirtxt)
@@ -974,14 +995,19 @@ def procesoold(nombre, clave):
         print('Datos de la estación estacion',clave,'listos')
         final=datetime.now()
         print("El proceso se completo a las",final,"la proxima ejecución será en 05 minutos")
-    except:
+    except Exception as e:
         final=datetime.now()
         print("No se logro obtener datos de la estación",clave)
         print("Se presento un error, la próxima ejecición será dentro de 05 minutos a partir de la hora:",final)
+        error_message = str(e)
+        print(error_message)
+        ERROR.handle_error('ModuloSGIRPC',nombre+'_replace',error_message)
         try:
             remove(dircsv)
-        except:
+        except Exception as e:
             print("No existe el archivo "+ dircsv)
+            error_message = str(e)
+            ERROR.handle_error('ModuloSGIRPC',nombre+'_remove_'+dircsv,error_message)
 
 
 # try:
@@ -990,7 +1016,7 @@ def procesoold(nombre, clave):
 #     print("Hubo un problema con la descarga de datos de estaestación")
 
 
-try:
-    procesoold("juarez", "SGIRPC")
-except:
-    print("Hubo un problema con la descarga de datos de estaestación")
+#try:
+#    procesoold("juarez", "SGIRPC")
+#except:
+#    print("Hubo un problema con la descarga de datos de estaestación")
