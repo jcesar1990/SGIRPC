@@ -10,7 +10,7 @@ def timer(timer_runs):
     while timer_runs.is_set():
 
         try:
-            ModuloPEMBU.proceso("ICAyCC")
+            ModuloPEMBU.proceso("cca")
         except:
             print("Hubo un problema al descargar los datos de esta estación")
             continue
@@ -39,11 +39,11 @@ def timer(timer_runs):
             print("Hubo un problema al descargar los datos de esta estación")
             continue
 
-        try:
-            ModuloPEMBU.proceso("cchv")
-        except:
-            print("Hubo un problema al descargar los datos de esta estación")
-            continue
+        #try:
+        #    ModuloPEMBU.proceso("cchv")
+        #except:
+        #    print("Hubo un problema al descargar los datos de esta estación")
+        #    continue
 
         try:
             ModuloPEMBU.proceso("enp1")
@@ -58,7 +58,7 @@ def timer(timer_runs):
             continue
 
         try:
-            ModuloPEMBU.proceso("enp3")
+            ModuloPEMBU.proceso2("enp3")
         except:
             print("Hubo un problema al descargar los datos de esta estación")
             continue
